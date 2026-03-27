@@ -21,12 +21,9 @@ spec:
         - resources-finalizer.argocd.argoproj.io/background
     spec:
       project: default
-      sources:
-      - repoURL: '{{.metadata.annotations.applications_repo_url}}'
-        targetRevision: '{{.metadata.annotations.applications_repo_revision}}'
-        ref: values
-      - path: 'stackit/cert-manager-crds'
-        repoURL: 'https://github.com/valiton-k8s-blueprints/charts.git'
+      source:
+        repoURL: 'https://valiton-k8s-blueprints.github.io/charts'
+        chart: 'stackit-cert-manager-crds'
         targetRevision: 'main'
       destination:
         name: '{{.name}}'
