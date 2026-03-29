@@ -15,20 +15,20 @@ spec:
           - clusters:
               values:
                 # anything not staging or prod use this version
-                addonVersion: machine-controller-v1.65.0
+                addonVersion: feature/mc
                 addonRepository: https://github.com/valiton-k8s-blueprints/kustomize.git
           - clusters:
               selector:
                 matchLabels:
                   environment: staging
               values:
-                addonVersion: machine-controller-v1.65.0
+                addonVersion: feature/mc
           - clusters:
               selector:
                 matchLabels:
                   environment: production
               values:
-                addonVersion: machine-controller-v1.65.0
+                addonVersion: feature/mc
   template:
     metadata:
       name: machine-controller
