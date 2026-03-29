@@ -42,18 +42,17 @@ spec:
         targetRevision: '{{.values.addonVersion}}'
         kustomize:
           images:
-            - name: quay.io/kubermatic/machine-controller
-              newTag: v1.65.0
+            - quay.io/kubermatic/machine-controller:v1.65.0
           patches:
-            - patch: |-
+            - target:
+                kind: Deployment
+                name: machine-controller
+              patch: |-
                 - op: add
                   path: "/spec/template/spec/containers/0/env/-"
                   value:
                     name: OS_AUTH_URL
                     value: {{.metadata.annotations.openstack_auth_url}}
-              target:
-                kind: Deployment
-                name: machine-controller
       destination:
         namespace: kube-system
         name: '{{.name}}'
