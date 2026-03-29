@@ -16,7 +16,7 @@ spec:
               values:
                 # anything not staging or prod use this version
                 addonVersion: machine-controller-v1.65.0
-                addonRepository: https://github.com/valiton-k8s-blueprint/kustomize.git
+                addonRepository: https://github.com/valiton-k8s-blueprints/kustomize.git
           - clusters:
               selector:
                 matchLabels:
