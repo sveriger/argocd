@@ -53,6 +53,15 @@ spec:
                   value:
                     name: OS_AUTH_URL
                     value: {{.metadata.annotations.openstack_auth_url}}
+            - target:
+                kind: Deployment
+                name: machine-controller-webhook
+              patch: |-
+                - op: add
+                  path: "/spec/template/spec/containers/0/env/-"
+                  value:
+                    name: OS_AUTH_URL
+                    value: {{.metadata.annotations.openstack_auth_url}}
       destination:
         namespace: kube-system
         name: '{{.name}}'
