@@ -54,11 +54,14 @@ server:
 configs:
   cm:
     application.resourceTrackingMethod: 'annotation' #use annotation for tracking required for Crossplane
+    kustomize.buildOptions: --enable-helm
     resource.exclusions: |
       - kinds:
         - ProviderConfigUsage
         apiGroups:
         - "*"
+  params:
+    controller.diff.server.side: "true"
 
 extraObjects:
   - |

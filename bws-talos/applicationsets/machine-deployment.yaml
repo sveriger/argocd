@@ -34,7 +34,7 @@ spec:
     metadata:
       name: machine-deployment
       annotations:
-        argocd.argoproj.io/compare-options: ServerSideDiff=true,IncludeMutationWebhook=true
+        argocd.argoproj.io/compare-options: IncludeMutationWebhook=true
       finalizers:
         - resources-finalizer.argocd.argoproj.io/background
     spec:
@@ -67,6 +67,11 @@ spec:
                   - {{.metadata.annotations.dynamic_worker_network_name}}-allow-internal
                   - {{.metadata.annotations.cluster_name}}-external
                 subnet: {{.metadata.annotations.dynamic_worker_subnet_name}}
+      ignoreDifferences:
+        - group: cluster.k8s.io/v1alpha1
+          kind: MachineDeployment
+          jsonPointers:
+            - /spec/replicas
       destination:
         namespace: kube-system
         name: '{{.name}}'
