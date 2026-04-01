@@ -65,7 +65,7 @@ spec:
                 rootDiskSizeGB: {{.metadata.annotations.dynamic_worker_disk_size}}
                 securityGroups: 
                   - {{.metadata.annotations.dynamic_worker_network_name}}-allow-internal
-                  - {{.metadata.annotations.dynamic_worker_network_name}}-external
+                  - {{.metadata.annotations.cluster_name}}-external
                 subnet: {{.metadata.annotations.dynamic_worker_subnet_name}}
       destination:
         namespace: kube-system
