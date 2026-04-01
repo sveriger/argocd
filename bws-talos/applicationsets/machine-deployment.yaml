@@ -17,7 +17,7 @@ spec:
                 addonChart: bws-machine-deployment
                 # anything not staging or prod use this version
                 addonChartVersion: 0.1.0
-                addonChartRepository: https://valiton-k8s-blurprints.github.io/charts
+                addonChartRepository: https://valiton-k8s-blueprints.github.io/charts
           - clusters:
               selector:
                 matchLabels:
