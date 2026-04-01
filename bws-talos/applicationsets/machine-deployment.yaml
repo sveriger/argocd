@@ -57,7 +57,6 @@ spec:
               machine:
                 minSize: {{.metadata.annotations.dynamic_worker_min_size}}
                 maxSize: {{.metadata.annotations.dynamic_worker_max_size}}
-                replicas: {{.metadata.annotations.dynamic_worker_size}}
               openstack:
                 flavor: {{.metadata.annotations.dynamic_worker_flavor_name}}
                 image: {{.metadata.annotations.dynamic_worker_image_name}}
