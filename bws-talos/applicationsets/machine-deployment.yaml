@@ -68,7 +68,7 @@ spec:
                   - {{.metadata.annotations.cluster_name}}-external
                 subnet: {{.metadata.annotations.dynamic_worker_subnet_name}}
       ignoreDifferences:
-        - group: cluster.k8s.io/v1alpha1
+        - group: cluster.k8s.io
           kind: MachineDeployment
           jsonPointers:
             - /spec/replicas
