@@ -70,7 +70,7 @@ spec:
         - group: cluster.k8s.io
           kind: MachineDeployment
           jsonPointers:
-            - /spec/replicas
+            - /metadata/generation
       destination:
         namespace: kube-system
         name: '{{.name}}'
