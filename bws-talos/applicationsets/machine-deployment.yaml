@@ -71,6 +71,7 @@ spec:
           kind: MachineDeployment
           jsonPointers:
             - /metadata/generation
+            - /spec/replicas
       destination:
         namespace: kube-system
         name: '{{.name}}'
