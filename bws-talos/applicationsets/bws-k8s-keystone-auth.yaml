@@ -8,25 +8,47 @@ spec:
   syncPolicy:
     preserveResourcesOnDeletion: true
   generators:
-    - clusters: {}
+    - merge:
+        mergeKeys: [server]
+        generators:
+          - clusters:
+              values:
+                addonChart: bws-k8s-keystone-auth
+                # anything not staging or prod use this version
+                addonChartVersion: feature/keystone-auth
+                addonChartRepository: https://valiton-k8s-blueprints.github.io/charts.git
+          - clusters:
+              selector:
+                matchLabels:
+                  environment: staging
+              values:
+                addonChartVersion: feature/keystone-auth
+          - clusters:
+              selector:
+                matchLabels:
+                  environment: production
+              values:
+                addonChartVersion: feature/keystone-auth
   template:
     metadata:
-      name: bws-k8s-keystone-auth
+      name: '{{.values.addonChart}}'
+      annotations:
+        argocd.argoproj.io/compare-options: IncludeMutationWebhook=true
     spec:
       project: default
       sources:
         - repoURL: '{{.metadata.annotations.applications_repo_url}}'
           targetRevision: '{{.metadata.annotations.applications_repo_revision}}'
           ref: values
-        - repoURL: 'https://github.com/valiton-k8s-blueprints/charts.git'
-          path: 'bws-k8s-keystone-auth'
-          targetRevision: 'feature/keystone-auth'
+        - repoURL: '{{.values.addonChartRepository}}'
+          path: '{{.values.addonChart}}'
+          targetRevision: '{{.values.addonChartVersion}}'
           helm:
-            releaseName: 'k8s-keystone-auth'
+            releaseName: '{{.values.addonChart}}'
             ignoreMissingValueFiles: true
             valueFiles:
-              - $values/{{.metadata.annotations.applications_repo_path}}/config/k8s-keystone-auth/values.yaml
-              - $values/{{.metadata.annotations.applications_repo_path}}/config/k8s-keystone-auth/{{.metadata.labels.environment}}.yaml
+              - $values/{{.metadata.annotations.applications_repo_path}}/config/{{.values.addonChart}}/values.yaml
+              - $values/{{.metadata.annotations.applications_repo_path}}/config/{{.values.addonChart}}/{{.metadata.labels.environment}}.yaml
             values: |
               authUrl: {{.metadata.annotations.openstack_auth_url}}
       destination:
