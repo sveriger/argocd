@@ -3,10 +3,8 @@ clusterSecretStore:
   namespaces:
     matchLabels:
       access-cluster-secrets: "true"
-cinderCsiPlugin:
-  enabled: true
-  namespace: cinder-csi-plugin
-  secretName: cinder-csi-plugin-secret
+  cinderCsiPlugin:
+    enabled: false
 externalDns:
   enabled: true
   namespace: external-dns
@@ -16,3 +14,5 @@ certManagerDesignateWebhook:
   enabled: true
   namespace: cert-manager
   secretName: designate-auth
+openstackCloudControllerManager:
+  enabled: false
