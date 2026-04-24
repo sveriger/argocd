@@ -22,9 +22,9 @@ spec:
     spec:
       project: default
       source:
-        repoURL: 'https://github.com/valiton-k8s-blueprints/charts.git'
-        path: 'stackit-cert-manager-crds'
-        targetRevision: 'main'
+        repoURL: 'https://valiton-k8s-blueprints.github.io/charts'
+        chart: 'stackit-cert-manager-crds'
+        targetRevision: '0.1.0'
       destination:
         name: '{{.name}}'
       syncPolicy:
