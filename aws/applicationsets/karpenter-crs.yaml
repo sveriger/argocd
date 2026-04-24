@@ -21,13 +21,10 @@ spec:
         - resources-finalizer.argocd.argoproj.io/background
     spec:
       project: default
-      sources:
-      - repoURL: '{{.metadata.annotations.applications_repo_url}}'
-        targetRevision: '{{.metadata.annotations.applications_repo_revision}}'
-        ref: values
-      - path: 'aws/karpenter-crs'
-        repoURL: 'https://github.com/valiton-k8s-blueprints/charts.git'
-        targetRevision: 'main'
+      source:
+        repoURL: 'https://valiton-k8s-blueprints.github.io/charts'
+        chart: 'aws-karpenter-crs'
+        targetRevision: '0.1.1'
         helm:
           values: |
             karpenter:

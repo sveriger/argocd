@@ -15,8 +15,8 @@ spec:
     spec:
       project: default
       source:
-        path: deploy/standalone
         repoURL: https://github.com/alex1989hu/kubelet-serving-cert-approver.git
+        path: deploy/standalone
         targetRevision: v0.10.1
       destination:
         name: '{{.name}}'
@@ -25,4 +25,5 @@ spec:
           prune: true
           selfHeal: true
         syncOptions:
-        - CreateNamespace=true
+          - CreateNamespace=true
+          - ServerSideApply=true

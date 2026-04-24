@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: k8s-keystone-auth
+  name: bws-k8s-keystone-auth
   namespace: argocd
 spec:
   goTemplate: true
@@ -11,15 +11,15 @@ spec:
     - clusters: {}
   template:
     metadata:
-      name: k8s-keystone-auth
+      name: bws-k8s-keystone-auth
     spec:
       project: default
       source:
-        repoURL: 'https://github.com/valiton-k8s-blueprints/charts.git'
-        path: 'bws/k8s-keystone-auth'
-        targetRevision: 'main'
+        repoURL: 'https://valiton-k8s-blueprints.github.io/charts'
+        chart: 'bws-k8s-keystone-auth'
+        targetRevision: '0.1.0'
         helm:
-          releaseName: k8s-keystone-auth
+          releaseName: bws-k8s-keystone-auth
           values: |
             imageTag: v1.34.1
             authUrl: {{.metadata.annotations.openstack_auth_url}}
@@ -30,4 +30,5 @@ spec:
           prune: true
           selfHeal: true
         syncOptions:
-        - CreateNamespace=true
+          - CreateNamespace=true
+          - ServerSideApply=true
