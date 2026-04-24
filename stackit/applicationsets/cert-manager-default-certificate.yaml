@@ -26,8 +26,8 @@ spec:
       - repoURL: '{{.metadata.annotations.applications_repo_url}}'
         targetRevision: '{{.metadata.annotations.applications_repo_revision}}'
         ref: values
-      - chart: 'stackit-cert-manager-default-certificate'
-        repoURL: 'https://valiton-k8s-blueprints.github.io/charts'
+      - path: 'stackit-cert-manager-default-certificate'
+        repoURL: 'https://github.com/valiton-k8s-blueprints/charts.git'
         targetRevision: 'main'
         helm:
           ignoreMissingValueFiles: true
