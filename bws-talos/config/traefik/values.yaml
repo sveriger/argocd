@@ -23,6 +23,7 @@ providers:
     enabled: false
   kubernetesIngressNGINX:
     enabled: true
+    watchIngressWithoutClass: true
   kubernetesGateway:
     enabled: false
 
