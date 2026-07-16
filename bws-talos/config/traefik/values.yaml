@@ -14,7 +14,7 @@ ingressRoute:
     enabled: false
 
 ingressClass:
-  enabled: true
+  enabled: false
 
 providers:
   kubernetesCRD:
