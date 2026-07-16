@@ -26,7 +26,7 @@ providers:
     publishService:
       enabled: true
   kubernetesGateway:
-    enabled: false
+    enabled: true
 
 log:
   level: INFO
