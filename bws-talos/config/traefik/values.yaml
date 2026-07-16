@@ -23,12 +23,11 @@ providers:
     enabled: false
   kubernetesIngressNGINX:
     enabled: true
-    watchIngressWithoutClass: true
   kubernetesGateway:
     enabled: false
 
 log:
-  level: INFO
+  level: DEBUG
 
 accessLog:
   enabled: true
