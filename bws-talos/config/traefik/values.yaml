@@ -43,3 +43,13 @@ service:
   annotations:
     loadbalancer.openstack.org/proxy-protocol: "true"
     loadbalancer.openstack.org/enable-health-monitor: "true"
+
+extraObjects:
+  - apiVersion: networking.k8s.io/v1
+    kind: IngressClass
+    metadata:
+      name: nginx
+      annotations:
+        ingressclass.kubernetes.io/is-default-class: "true"
+    spec:
+      controller: k8s.io/ingress-nginx
