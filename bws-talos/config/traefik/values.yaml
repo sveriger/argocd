@@ -23,6 +23,8 @@ providers:
     enabled: false
   kubernetesIngressNGINX:
     enabled: true
+    publishService:
+      enabled: true
   kubernetesGateway:
     enabled: false
 
