@@ -1,0 +1,6 @@
+crds:
+  enabled: true
+serviceAccount:
+  name: cert-manager
+config:
+  enableGatewayAPI: true
