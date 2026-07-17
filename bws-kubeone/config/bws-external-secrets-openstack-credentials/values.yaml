@@ -3,8 +3,8 @@ clusterSecretStore:
   namespaces:
     matchLabels:
       access-cluster-secrets: "true"
-  cinderCsiPlugin:
-    enabled: false
+cinderCsiPlugin:
+  enabled: false
 externalDns:
   enabled: true
   namespace: external-dns
