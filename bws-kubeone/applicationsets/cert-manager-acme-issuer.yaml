@@ -1,39 +1,38 @@
----
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: argocd
+  name: cert-manager-acme-issuers
   namespace: argocd
 spec:
   goTemplate: true
   syncPolicy:
-    preserveResourcesOnDeletion: true
+    preserveResourcesOnDeletion: false
   generators:
     - merge:
         mergeKeys: [server]
         generators:
           - clusters:
               values:
-                addonChart: argo-cd
-                # anything not staging or prod use this version
-                addonChartVersion:  10.1.3
-                addonChartRepositoryNamespace: argocd
-                addonChartRepository: https://argoproj.github.io/argo-helm
+                addonChart: cert-manager-acme-issuer
+                addonChartVersion: 0.1.0
+                addonChartRepository: https://valiton-k8s-blueprints.github.io/charts
           - clusters:
               selector:
                 matchLabels:
                   environment: staging
               values:
-                addonChartVersion: 10.1.3
+                addonChartVersion: 0.1.0
           - clusters:
               selector:
                 matchLabels:
                   environment: production
               values:
-                addonChartVersion: 10.1.3
+                addonChartVersion: 0.1.0
   template:
     metadata:
       name: '{{.values.addonChart}}'
+      finalizers:
+        - resources-finalizer.argocd.argoproj.io/background
     spec:
       project: default
       sources:
@@ -49,12 +48,14 @@ spec:
             valueFiles:
               - $values/{{.metadata.annotations.applications_repo_path}}/config/{{.values.addonChart}}/values.yaml
               - $values/{{.metadata.annotations.applications_repo_path}}/config/{{.values.addonChart}}/{{.metadata.labels.environment}}.yaml
+            values: |
+              acme:
+                registrationEmail: {{.metadata.annotations.cert_manager_acme_registration_email}}
       destination:
-        namespace: '{{.values.addonChartRepositoryNamespace}}'
         name: '{{.name}}'
       syncPolicy:
         automated:
-          prune: false
+          prune: true
           selfHeal: true
         syncOptions:
           - CreateNamespace=true

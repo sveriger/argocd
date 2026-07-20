@@ -1,0 +1,98 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: traefik
+  namespace: argocd
+spec:
+  goTemplate: true
+  syncPolicy:
+    preserveResourcesOnDeletion: false
+  generators:
+    - merge:
+        mergeKeys: [server]
+        generators:
+          - clusters:
+              values:
+                addonChart: traefik
+                addonChartVersion: 41.0.2
+                addonChartRepository: https://traefik.github.io/charts
+                addonChartRepositoryNamespace: traefik-system
+          - clusters:
+              selector:
+                matchLabels:
+                  environment: production
+              values:
+                addonChartVersion: 41.0.2
+          - clusters:
+              selector:
+                matchLabels:
+                  environment: staging
+              values:
+                addonChartVersion: 41.0.2
+  template:
+    metadata:
+      name: "{{.values.addonChart}}"
+    spec:
+      project: default
+      sources:
+        - repoURL: "{{.metadata.annotations.applications_repo_url}}"
+          targetRevision: "{{ .metadata.annotations.applications_repo_revision }}"
+          ref: values
+        - repoURL: "{{.values.addonChartRepository}}"
+          chart: "{{.values.addonChart}}"
+          targetRevision: "{{.values.addonChartVersion}}"
+          helm:
+            releaseName: traefik
+            ignoreMissingValueFiles: true
+            valueFiles:
+              - $values/{{.metadata.annotations.applications_repo_path}}/config/{{.values.addonChart}}/values.yaml
+              - $values/{{.metadata.annotations.applications_repo_path}}/config/{{.values.addonChart}}/{{.metadata.labels.environment}}.yaml
+            values: |
+              extraObjects:
+                - apiVersion: networking.k8s.io/v1
+                  kind: IngressClass
+                  metadata:
+                    name: nginx
+                    annotations:
+                      ingressclass.kubernetes.io/is-default-class: "true"
+                  spec:
+                    controller: k8s.io/ingress-nginx
+                - apiVersion: gateway.networking.k8s.io/v1
+                  kind: Gateway
+                  metadata:
+                    name: default
+                    annotations:
+                      cert-manager.io/cluster-issuer: letsencrypt-dns01
+                  spec:
+                    gatewayClassName: traefik
+                    listeners:
+                      - name: http
+                        protocol: HTTP
+                        port: 80
+                        hostname: "*.{{.metadata.annotations.dns_domain}}"
+                        allowedRoutes:
+                          namespaces:
+                            from: All
+                      - name: https
+                        protocol: HTTPS
+                        port: 443
+                        hostname: "*.{{.metadata.annotations.dns_domain}}"
+                        tls:
+                          certificateRefs:
+                            - group: ""
+                              kind: Secret
+                              name: wildcard-tls
+                          mode: Terminate
+                        allowedRoutes:
+                          namespaces:
+                            from: All
+      destination:
+        namespace: "{{.values.addonChartRepositoryNamespace}}"
+        name: "{{.name}}"
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true

@@ -2,39 +2,38 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: ingress-nginx
+  name: argocd
   namespace: argocd
 spec:
   goTemplate: true
   syncPolicy:
-    preserveResourcesOnDeletion: false
+    preserveResourcesOnDeletion: true
   generators:
     - merge:
         mergeKeys: [server]
         generators:
           - clusters:
               values:
-                addonChart: ingress-nginx
+                addonChart: argo-cd
                 # anything not staging or prod use this version
-                addonChartVersion: 4.14.1
-                addonChartRepository: https://kubernetes.github.io/ingress-nginx
+                addonChartVersion:  10.1.3
+                addonChartRepositoryNamespace: argocd
+                addonChartRepository: https://argoproj.github.io/argo-helm
           - clusters:
               selector:
                 matchLabels:
                   environment: staging
               values:
-                addonChartVersion: 4.14.1
+                addonChartVersion: 10.1.3
           - clusters:
               selector:
                 matchLabels:
                   environment: production
               values:
-                addonChartVersion: 4.14.1
+                addonChartVersion: 10.1.3
   template:
     metadata:
       name: '{{.values.addonChart}}'
-      finalizers:
-        - resources-finalizer.argocd.argoproj.io/background
     spec:
       project: default
       sources:
@@ -51,11 +50,11 @@ spec:
               - $values/{{.metadata.annotations.applications_repo_path}}/config/{{.values.addonChart}}/values.yaml
               - $values/{{.metadata.annotations.applications_repo_path}}/config/{{.values.addonChart}}/{{.metadata.labels.environment}}.yaml
       destination:
-        namespace: ingress-nginx
+        namespace: '{{.values.addonChartRepositoryNamespace}}'
         name: '{{.name}}'
       syncPolicy:
         automated:
-          prune: true
+          prune: false
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
